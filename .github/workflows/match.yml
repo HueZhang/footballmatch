@@ -1,0 +1,65 @@
+name: 发送赛事通知
+
+# 触发条件配置
+on:
+  # 1. 定时触发（使用 cron 表达式）
+  schedule:
+    # 每天早上 8:00 运行（UTC时间0:00 = 北京时间8:00）
+    - cron: "0 8 * * *"
+
+    # 如果你想测试，可以再加一个时间点
+    # - cron: '30 9 * * *'  # 北京时间17:30
+
+  # 2. 支持手动触发（方便测试）
+  workflow_dispatch:
+
+# 权限配置
+permissions:
+  contents: read # 只需要读取权限
+
+jobs:
+  send-matches:
+    name: 发送赛事消息
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. 检出代码
+      - name: 检出代码
+        uses: actions/checkout@v3
+
+      # 2. 设置 Python 环境
+      - name: 设置 Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+          cache: "pip" # 缓存依赖，加快执行速度
+
+      # 3. 安装依赖
+      - name: 安装依赖
+        run: |
+          pip install requests
+          # 如果你还有其他依赖，可以在这里加
+
+      # 4. 设置脚本执行权限（如果需要）
+      - name: 设置权限
+        run: chmod +x *.py 2>/dev/null || true
+
+      # 5. 运行你的发送脚本
+      - name: 发送微信消息
+        env:
+          # 从 GitHub Secrets 读取配置
+          APP_ID: ${{ secrets.APP_ID }}
+          APP_SECRET: ${{ secrets.APP_SECRET }}
+          OPEN_ID: ${{ secrets.OPEN_ID }}
+          TEMPLATE_ID: ${{ secrets.TEMPLATE_ID }}
+        run: python main.py # 替换成你的实际文件名
+
+      # 6. （可选）发送执行结果通知
+      - name: 发送执行状态通知
+        if: always() # 无论成功失败都执行
+        run: |
+          if [ ${{ job.status }} == 'success' ]; then
+            echo "✅ 赛事通知发送成功"
+          else
+            echo "❌ 赛事通知发送失败，请检查日志"
+          fi

@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 import os
 import collections
 import json
-import requests
 
 
 # sofascore或其他，okoo只有可投注的比赛，先用okoo 
