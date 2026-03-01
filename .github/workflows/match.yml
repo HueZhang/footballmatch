@@ -37,8 +37,8 @@ jobs:
       # 3. 安装依赖
       - name: 安装依赖
         run: |
-          pip install requests
-          # 如果你还有其他依赖，可以在这里加
+          pip install -r requirements.txt
+        # 如果你还有其他依赖，可以在这里加
 
       # 4. 设置脚本执行权限（如果需要）
       - name: 设置权限
