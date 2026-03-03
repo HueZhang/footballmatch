@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import os
 import collections
 import json
+from datetime import datetime, timezone
 
 
 # sofascore或其他，okoo只有可投注的比赛，先用okoo 
@@ -13,9 +14,10 @@ DATA_URL = "https://www.okooo.com/jingcai/"
 APP_ID = os.environ.get("APP_ID")
 APP_SECRET = os.environ.get("APP_SECRET")
 TEMPLATE_ID = os.environ.get("TEMPLATE_ID")
+F1_TEMPLATE_ID = 'AXjbhHbIq3ycr2YZOCPbTcR71LlKA0N7KKhZVVNqoyo'
 OPEN_ID = os.environ.get("OPEN_ID")
 MYTEAM = '曼联'
-
+F1_JSON = "f1_2026_schedule.json"
 
 # 获取网页
 def get_html():
@@ -206,7 +208,66 @@ def send_msg(access_token, my_match):
     url = f'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={access_token}'
     print(requests.post(url, json.dumps(body)).text)
 
+
+def check_f1_schedule(file_path):
+    # 1. 加载 JSON 数据
+    with open(file_path, 'r', encoding='utf-8') as f:
+        data = json.load(f)
+    
+    # 2. 获取当前 UTC 日期 (YYYY-MM-DD)
+    now_utc = datetime.now(timezone.utc)
+    today_str = now_utc.strftime('%Y-%m-%d')
+    
+    reminders = []
+
+    # 3. 遍历所有分站
+    for event in data['schedule']:
+        gp_name = event['gp_name']
         
+        # 4. 遍历该分站的所有阶段 (Session)
+        for session_name, session_time in event['sessions'].items():
+            # 检查日期是否匹配
+            if session_time.startswith(today_str):
+                # 提取具体时间部分用于显示
+                time_part = session_time.split('T')[1].replace('Z', '')
+                cn_name = gp_name.split('(')[1].replace(')', '').strip() if '(' in gp_name else gp_name
+                en_name = gp_name.split('(')[0].strip() if '(' in gp_name else gp_name
+                reminders.append({
+                    "gp": en_name,
+                    "gpCN": cn_name,
+                    "session": session_name.upper(),
+                    "time": time_part
+                })
+                
+    return reminders
+
+def send_f1_msg():
+    access_token = get_access_token()
+    my_match = check_f1_schedule(F1_JSON)
+    for match in my_match:
+        body = {
+                "touser": OPEN_ID.strip(),
+                "template_id": F1_TEMPLATE_ID.strip(),
+                "url": "https://weixin.qq.com",  # 可以改成你的赛事详情页
+                "data": {
+                    "gpName": {
+                        "value": match['gp']
+                    },
+                    "gpNameCN": {
+                        "value": match['gpCN']
+                    },
+                    "sessionName": {
+                        "value": match['session']
+                    },
+                    "time": {
+                        "value": match['time']
+                    }
+                }
+            }
+        url = f'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={access_token}'
+        print(requests.post(url, json.dumps(body)).text)
+
+
 
 
 if __name__ == "__main__":
@@ -221,8 +282,6 @@ if __name__ == "__main__":
             print(json.dumps(final_results, ensure_ascii=False, indent=2))
             token = get_access_token()
             send_msg(token, final_results)
-        
-
     else:
         print("未获取到网页数据，任务终止。")
 

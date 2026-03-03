@@ -1,0 +1,271 @@
+{
+  "season": 2026,
+  "timezone": "UTC",
+  "data_format": "ISO 8601",
+  "schedule": [
+    {
+      "round": 1,
+      "gp_name": "Australian Grand Prix (澳大利亚大奖赛)",
+      "sessions": {
+        "fp1": "2026-03-06T01:30:00Z",
+        "fp2": "2026-03-06T05:00:00Z",
+        "fp3": "2026-03-07T01:30:00Z",
+        "qualifying": "2026-03-07T05:00:00Z",
+        "race": "2026-03-08T04:00:00Z"
+      }
+    },
+    {
+      "round": 2,
+      "gp_name": "Chinese Grand Prix (中国大奖赛) [Sprint]",
+      "sessions": {
+        "fp1": "2026-03-13T03:30:00Z",
+        "sprint_qualifying": "2026-03-13T07:30:00Z",
+        "sprint_race": "2026-03-14T03:00:00Z",
+        "qualifying": "2026-03-14T07:00:00Z",
+        "race": "2026-03-15T07:00:00Z"
+      }
+    },
+    {
+      "round": 3,
+      "gp_name": "Japanese Grand Prix (日本大奖赛)",
+      "sessions": {
+        "fp1": "2026-03-27T02:30:00Z",
+        "fp2": "2026-03-27T06:00:00Z",
+        "fp3": "2026-03-28T02:30:00Z",
+        "qualifying": "2026-03-28T06:00:00Z",
+        "race": "2026-03-29T05:00:00Z"
+      }
+    },
+    {
+      "round": 4,
+      "gp_name": "Bahrain Grand Prix (巴林大奖赛)",
+      "sessions": {
+        "fp1": "2026-04-10T11:30:00Z",
+        "fp2": "2026-04-10T15:00:00Z",
+        "fp3": "2026-04-11T12:30:00Z",
+        "qualifying": "2026-04-11T16:00:00Z",
+        "race": "2026-04-12T15:00:00Z"
+      }
+    },
+    {
+      "round": 5,
+      "gp_name": "Saudi Arabian Grand Prix (沙特大奖赛)",
+      "sessions": {
+        "fp1": "2026-04-17T13:30:00Z",
+        "fp2": "2026-04-17T17:00:00Z",
+        "fp3": "2026-04-18T13:30:00Z",
+        "qualifying": "2026-04-18T17:00:00Z",
+        "race": "2026-04-19T17:00:00Z"
+      }
+    },
+    {
+      "round": 6,
+      "gp_name": "Miami Grand Prix (迈阿密大奖赛) [Sprint]",
+      "sessions": {
+        "fp1": "2026-05-01T16:30:00Z",
+        "sprint_qualifying": "2026-05-01T20:30:00Z",
+        "sprint_race": "2026-05-02T16:00:00Z",
+        "qualifying": "2026-05-02T20:00:00Z",
+        "race": "2026-05-03T20:00:00Z"
+      }
+    },
+    {
+      "round": 7,
+      "gp_name": "Canadian Grand Prix (加拿大大奖赛) [Sprint]",
+      "sessions": {
+        "fp1": "2026-05-22T17:30:00Z",
+        "sprint_qualifying": "2026-05-22T21:30:00Z",
+        "sprint_race": "2026-05-23T17:00:00Z",
+        "qualifying": "2026-05-23T21:00:00Z",
+        "race": "2026-05-24T18:00:00Z"
+      }
+    },
+    {
+      "round": 8,
+      "gp_name": "Monaco Grand Prix (摩纳哥大奖赛)",
+      "sessions": {
+        "fp1": "2026-06-05T11:30:00Z",
+        "fp2": "2026-06-05T15:00:00Z",
+        "fp3": "2026-06-06T10:30:00Z",
+        "qualifying": "2026-06-06T14:00:00Z",
+        "race": "2026-06-07T13:00:00Z"
+      }
+    },
+    {
+      "round": 9,
+      "gp_name": "Spanish Grand Prix - Barcelona (西班牙大奖赛-巴塞罗那)",
+      "sessions": {
+        "fp1": "2026-06-12T11:30:00Z",
+        "fp2": "2026-06-12T15:00:00Z",
+        "fp3": "2026-06-13T10:30:00Z",
+        "qualifying": "2026-06-13T14:00:00Z",
+        "race": "2026-06-14T13:00:00Z"
+      }
+    },
+    {
+      "round": 10,
+      "gp_name": "Austrian Grand Prix (奥地利大奖赛)",
+      "sessions": {
+        "fp1": "2026-06-26T11:30:00Z",
+        "fp2": "2026-06-26T15:00:00Z",
+        "fp3": "2026-06-27T10:30:00Z",
+        "qualifying": "2026-06-27T14:00:00Z",
+        "race": "2026-06-28T13:00:00Z"
+      }
+    },
+    {
+      "round": 11,
+      "gp_name": "British Grand Prix (英国大奖赛) [Sprint]",
+      "sessions": {
+        "fp1": "2026-07-03T11:30:00Z",
+        "sprint_qualifying": "2026-07-03T15:30:00Z",
+        "sprint_race": "2026-07-04T12:00:00Z",
+        "qualifying": "2026-07-04T15:00:00Z",
+        "race": "2026-07-05T14:00:00Z"
+      }
+    },
+    {
+      "round": 12,
+      "gp_name": "Belgian Grand Prix (比利时大奖赛)",
+      "sessions": {
+        "fp1": "2026-07-17T11:30:00Z",
+        "fp2": "2026-07-17T15:00:00Z",
+        "fp3": "2026-07-18T10:30:00Z",
+        "qualifying": "2026-07-18T14:00:00Z",
+        "race": "2026-07-19T13:00:00Z"
+      }
+    },
+    {
+      "round": 13,
+      "gp_name": "Hungarian Grand Prix (匈牙利大奖赛)",
+      "sessions": {
+        "fp1": "2026-07-24T11:30:00Z",
+        "fp2": "2026-07-24T15:00:00Z",
+        "fp3": "2026-07-25T10:30:00Z",
+        "qualifying": "2026-07-25T14:00:00Z",
+        "race": "2026-07-26T13:00:00Z"
+      }
+    },
+    {
+      "round": 14,
+      "gp_name": "Dutch Grand Prix (荷兰大奖赛) [Sprint]",
+      "sessions": {
+        "fp1": "2026-08-21T10:30:00Z",
+        "sprint_qualifying": "2026-08-21T14:30:00Z",
+        "sprint_race": "2026-08-22T10:30:00Z",
+        "qualifying": "2026-08-22T14:00:00Z",
+        "race": "2026-08-23T13:00:00Z"
+      }
+    },
+    {
+      "round": 15,
+      "gp_name": "Italian Grand Prix (意大利大奖赛)",
+      "sessions": {
+        "fp1": "2026-09-04T11:30:00Z",
+        "fp2": "2026-09-04T15:00:00Z",
+        "fp3": "2026-09-05T10:30:00Z",
+        "qualifying": "2026-09-05T14:00:00Z",
+        "race": "2026-09-06T13:00:00Z"
+      }
+    },
+    {
+      "round": 16,
+      "gp_name": "Spanish Grand Prix - Madrid (西班牙大奖赛-马德里)",
+      "sessions": {
+        "fp1": "2026-09-11T11:30:00Z",
+        "fp2": "2026-09-11T15:00:00Z",
+        "fp3": "2026-09-12T10:30:00Z",
+        "qualifying": "2026-09-12T14:00:00Z",
+        "race": "2026-09-13T13:00:00Z"
+      }
+    },
+    {
+      "round": 17,
+      "gp_name": "Azerbaijan Grand Prix (阿塞拜疆大奖赛)",
+      "sessions": {
+        "fp1": "2026-09-25T09:30:00Z",
+        "fp2": "2026-09-25T13:00:00Z",
+        "fp3": "2026-09-26T08:30:00Z",
+        "qualifying": "2026-09-26T12:00:00Z",
+        "race": "2026-09-27T11:00:00Z"
+      }
+    },
+    {
+      "round": 18,
+      "gp_name": "Singapore Grand Prix (新加坡大奖赛) [Sprint]",
+      "sessions": {
+        "fp1": "2026-10-09T09:30:00Z",
+        "sprint_qualifying": "2026-10-09T13:30:00Z",
+        "sprint_race": "2026-10-10T11:30:00Z",
+        "qualifying": "2026-10-10T14:00:00Z",
+        "race": "2026-10-11T12:00:00Z"
+      }
+    },
+    {
+      "round": 19,
+      "gp_name": "United States Grand Prix (美国大奖赛)",
+      "sessions": {
+        "fp1": "2026-10-23T17:30:00Z",
+        "fp2": "2026-10-23T21:00:00Z",
+        "fp3": "2026-10-24T18:30:00Z",
+        "qualifying": "2026-10-24T22:00:00Z",
+        "race": "2026-10-25T19:00:00Z"
+      }
+    },
+    {
+      "round": 20,
+      "gp_name": "Mexico City Grand Prix (墨西哥城大奖赛)",
+      "sessions": {
+        "fp1": "2026-10-30T19:30:00Z",
+        "fp2": "2026-10-30T23:00:00Z",
+        "fp3": "2026-10-31T18:30:00Z",
+        "qualifying": "2026-10-31T22:00:00Z",
+        "race": "2026-11-01T20:00:00Z"
+      }
+    },
+    {
+      "round": 21,
+      "gp_name": "São Paulo Grand Prix (圣保罗大奖赛)",
+      "sessions": {
+        "fp1": "2026-11-06T14:30:00Z",
+        "fp2": "2026-11-06T18:00:00Z",
+        "fp3": "2026-11-07T14:30:00Z",
+        "qualifying": "2026-11-07T18:00:00Z",
+        "race": "2026-11-08T17:00:00Z"
+      }
+    },
+    {
+      "round": 22,
+      "gp_name": "Las Vegas Grand Prix (拉斯维加斯大奖赛)",
+      "sessions": {
+        "fp1": "2026-11-19T02:30:00Z",
+        "fp2": "2026-11-19T06:00:00Z",
+        "fp3": "2026-11-20T02:30:00Z",
+        "qualifying": "2026-11-20T06:00:00Z",
+        "race": "2026-11-21T06:00:00Z"
+      }
+    },
+    {
+      "round": 23,
+      "gp_name": "Qatar Grand Prix (卡塔尔大奖赛)",
+      "sessions": {
+        "fp1": "2026-11-27T13:30:00Z",
+        "fp2": "2026-11-27T17:00:00Z",
+        "fp3": "2026-11-28T13:30:00Z",
+        "qualifying": "2026-11-28T17:00:00Z",
+        "race": "2026-11-29T15:00:00Z"
+      }
+    },
+    {
+      "round": 24,
+      "gp_name": "Abu Dhabi Grand Prix (阿布扎比大奖赛)",
+      "sessions": {
+        "fp1": "2026-12-04T09:30:00Z",
+        "fp2": "2026-12-04T13:00:00Z",
+        "fp3": "2026-12-05T10:30:00Z",
+        "qualifying": "2026-12-05T14:00:00Z",
+        "race": "2026-12-06T13:00:00Z"
+      }
+    }
+  ]
+}
