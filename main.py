@@ -271,6 +271,7 @@ def send_f1_msg():
 
 
 if __name__ == "__main__":
+    send_f1_msg()
     html = get_html()
     
     if html:
