@@ -351,8 +351,8 @@ def send_email_csv(csv_content):
     message.attach(MIMEText("附件为今日解析的比赛列表，请查收。", "plain", "utf-8"))
 
     # 附件
-    attachment = MIMEText(csv_content, "csv", "utf-8")
-    attachment.add_header("Content-Disposition", "attachment", filename="matches.csv")
+    attachment = MIMEText(csv_content, "txt", "utf-8")
+    attachment.add_header("Content-Disposition", "attachment", filename="matches.txt")
     message.attach(attachment)
 
     # 发送邮件
