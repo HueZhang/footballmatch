@@ -316,21 +316,14 @@ def convert_to_csv_string(match_data_list):
     output = io.StringIO()
 
     # 定义表头映射 (代码中的 key -> CSV 中的显示名称)
-    field_map = {
-        "league_name": "联赛名称",
-        "home_name": "主队",
-        "away_name": "客队",
-    }
+    field_keys = ["league_name", "home_name", "away_name"]
 
     # 初始化 CSV 写入器
     # line_terminator='\n' 确保跨平台换行符一致
-    writer = csv.DictWriter(output, fieldnames=field_map.keys(), extrasaction="ignore")
-
-    # 写入表头 (自定义中文表头)
-    output.write(",".join(field_map.values()) + "\n")
+    writer = csv.DictWriter(output, fieldnames=field_keys, extrasaction="ignore")
 
     # 写入数据行
-    for item in match_data_list[1:]:
+    for item in match_data_list:
         writer.writerow(item)
 
     # 获取字符串内容
