@@ -3,12 +3,18 @@ from bs4 import BeautifulSoup
 import os
 import collections
 import json
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
+import csv
+import io
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.header import Header
+from email.utils import formataddr
 
 
 # sofascore或其他，okoo只有可投注的比赛，先用okoo 
 DATA_URL = "https://www.okooo.com/jingcai/"
-
 
 # --- GitHub action 获取配置---
 APP_ID = os.environ.get("APP_ID")
@@ -18,6 +24,14 @@ F1_TEMPLATE_ID = 'AXjbhHbIq3ycr2YZOCPbTcR71LlKA0N7KKhZVVNqoyo'
 OPEN_ID = os.environ.get("OPEN_ID")
 MYTEAM = '曼联'
 F1_JSON = "f1_2026_schedule.json"
+SMTP_SERVER = "smtp.qq.com"  
+SMTP_PORT = 465    
+# 
+SENDER_RECV_EMAIL = os.environ.get("SENDER_RECV_EMAIL")
+# 不是邮箱登录密码，是SMTP授权码
+SENDER_PASSWORD = os.environ.get("SENDER_PASSWORD")
+
+
 
 # 获取网页
 def get_html():
@@ -208,15 +222,17 @@ def send_msg(access_token, my_match):
     url = f'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={access_token}'
     print(requests.post(url, json.dumps(body)).text)
 
-
 def check_f1_schedule(file_path):
     # 1. 加载 JSON 数据
     with open(file_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
     
-    # 2. 获取当前 UTC 日期 (YYYY-MM-DD)
+    # 2. 获取当前 UTC 时间和日期字符串
     now_utc = datetime.now(timezone.utc)
     today_str = now_utc.strftime('%Y-%m-%d')
+    
+    # 定义北京时间偏移量 (UTC+8)
+    beijing_offset = timedelta(hours=8)
     
     reminders = []
 
@@ -225,21 +241,34 @@ def check_f1_schedule(file_path):
         gp_name = event['gp_name']
         
         # 4. 遍历该分站的所有阶段 (Session)
-        for session_name, session_time in event['sessions'].items():
-            # 检查日期是否匹配
-            if session_time.startswith(today_str):
-                # 提取具体时间部分用于显示
-                time_part = session_time.split('T')[1].replace('Z', '')
+        for session_name, session_time_str in event['sessions'].items():
+            # 解析 session_time 为带时区的 datetime 对象
+            # replace('Z', '+00:00') 是为了让 fromisoformat 能够识别 UTC 标志
+            session_dt = datetime.fromisoformat(session_time_str.replace('Z', '+00:00'))
+
+            # 5. 修改后的判断条件：
+            # a. UTC 日期匹配今天 (today_str)
+            # b. 且当前 UTC 时间在 session 开始时间之前
+            if session_time_str.startswith(today_str) and now_utc < session_dt:
+                
+                # 6. 转换为北京时间 (UTC+8)
+                bj_dt = session_dt + beijing_offset
+                # 格式化为 HH:MM 形式
+                time_part = bj_dt.strftime('%H:%M')
+                
+                # 处理名称解析
                 cn_name = gp_name.split('(')[1].replace(')', '').strip() if '(' in gp_name else gp_name
                 en_name = gp_name.split('(')[0].strip() if '(' in gp_name else gp_name
+                
                 reminders.append({
                     "gp": en_name,
                     "gpCN": cn_name,
                     "session": session_name.upper(),
-                    "time": time_part
+                    "time": time_part  # 此时为北京时间
                 })
                 
     return reminders
+
 
 def send_f1_msg():
     access_token = get_access_token()
@@ -268,21 +297,86 @@ def send_f1_msg():
         print(requests.post(url, json.dumps(body)).text)
 
 
+def convert_to_csv_string(match_data_list):
+    """
+    将解析出的比赛数据列表转换为 CSV 格式字符串
+    字段：联赛名称, 主队, 客队
+    """
+    if not match_data_list:
+        return ""
 
+    # 使用 StringIO 在内存中构建文件
+    output = io.StringIO()
+    
+    # 定义表头映射 (代码中的 key -> CSV 中的显示名称)
+    field_map = {
+        'league_name': '联赛名称',
+        'home_name': '主队',
+        'away_name': '客队'
+    }
+    
+    # 初始化 CSV 写入器
+    # line_terminator='\n' 确保跨平台换行符一致
+    writer = csv.DictWriter(output, fieldnames=field_map.keys(), extrasaction='ignore')
+    
+    # 写入表头 (自定义中文表头)
+    output.write(','.join(field_map.values()) + '\n')
+    
+    # 写入数据行
+    for item in match_data_list:
+        writer.writerow(item)
+    
+    # 获取字符串内容
+    csv_content = output.getvalue()
+    output.close()
+    
+    return csv_content
+
+
+def send_email_csv(csv_content):
+    message = MIMEMultipart()
+    message['From'] = formataddr(["数据抓取助手", SENDER_RECV_EMAIL])
+    message['Subject'] = Header(f"【定时日报】{datetime.date.today()} 比赛数据整理", 'utf-8')
+    message['To'] = ",".join(SENDER_RECV_EMAIL)
+    
+    # 正文
+    message.attach(MIMEText("附件为今日解析的比赛列表，请查收。", 'plain', 'utf-8'))
+
+    # 附件
+    attachment = MIMEText(csv_content, 'csv', 'utf-8')
+    attachment.add_header('Content-Disposition', 'attachment', filename='matches.csv')
+    message.attach(attachment)
+    
+    # 发送邮件
+    try:
+        server = smtplib.SMTP_SSL(SMTP_SERVER, SMTP_PORT)
+        server.login(SENDER_RECV_EMAIL, SENDER_PASSWORD)
+        server.sendmail(SENDER_RECV_EMAIL, SENDER_RECV_EMAIL, message.as_string())
+        server.quit()
+        print(f"[{datetime.datetime.now()}] 邮件（含附件）已发送。")
+    except Exception as e:
+        print(f"发送邮件失败: {e}")
 
 if __name__ == "__main__":
-    send_f1_msg()
-    html = get_html()
     
+    # 发送f1赛程提醒
+    send_f1_msg()
+    # 获取网页
+    html = get_html()
     if html:
         data = parse_data(html)
          # 执行筛选
         # final_results = filter_user_matches(user_data, data)
+        # 主队信息提醒
         final_results = filter_my_matches(data)
         if final_results:
             print(json.dumps(final_results, ensure_ascii=False, indent=2))
             token = get_access_token()
             send_msg(token, final_results)
+        
+        # 转换为 CSV 字符串（如果需要发送邮件或其他用途）
+        csv_string = convert_to_csv_string(data)
+        send_email_csv(csv_string)
     else:
         print("未获取到网页数据，任务终止。")
 
