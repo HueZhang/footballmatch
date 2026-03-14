@@ -223,6 +223,7 @@ def send_msg(access_token, my_match):
     url = f'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token={access_token}'
     print(requests.post(url, json.dumps(body)).text)
 
+# 检查F1赛程，返回今天还未开始的比赛列表
 def check_f1_schedule(file_path):
     # 1. 加载 JSON 数据
     with open(file_path, 'r', encoding='utf-8') as f:
@@ -247,6 +248,7 @@ def check_f1_schedule(file_path):
             # replace('Z', '+00:00') 是为了让 fromisoformat 能够识别 UTC 标志
             session_dt = datetime.fromisoformat(session_time_str.replace('Z', '+00:00'))
 
+            print(f"检查 {gp_name} - {session_name}: 赛程时间 {session_time_str} (UTC), 当前时间 {now_utc.isoformat()} (UTC)")
             # 5. 修改后的判断条件：
             # a. UTC 日期匹配今天 (today_str)
             # b. 且当前 UTC 时间在 session 开始时间之前
@@ -355,7 +357,6 @@ def send_email_csv(csv_content):
         server.login(SENDER_RECV_EMAIL, SENDER_PASSWORD)
         server.sendmail(SENDER_RECV_EMAIL, SENDER_RECV_EMAIL, message.as_string())
         server.quit()
-        print(f"[{datetime.datetime.now()}] 邮件（含附件）已发送。")
     except Exception as e:
         print(f"发送邮件失败: {e}")
 
