@@ -248,11 +248,11 @@ def check_f1_schedule(file_path):
             # replace('Z', '+00:00') 是为了让 fromisoformat 能够识别 UTC 标志
             session_dt = datetime.fromisoformat(session_time_str.replace('Z', '+00:00'))
 
-            print(f"检查 {gp_name} - {session_name}: 赛程时间 {session_time_str} (UTC), 当前时间 {now_utc.isoformat()} (UTC)")
             # 5. 修改后的判断条件：
             # a. UTC 日期匹配今天 (today_str)
             # b. 且当前 UTC 时间在 session 开始时间之前
             if session_time_str.startswith(today_str) and now_utc < session_dt:
+                print(f"检查 {gp_name} - {session_name}: 赛程时间 {session_time_str} (UTC), 当前时间 {now_utc.isoformat()} (UTC)")
                 
                 # 6. 转换为北京时间 (UTC+8)
                 bj_dt = session_dt + beijing_offset
