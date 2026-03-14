@@ -337,7 +337,8 @@ def convert_to_csv_string(match_data_list):
 def send_email_csv(csv_content):
     message = MIMEMultipart()
     message['From'] = formataddr(["数据抓取助手", SENDER_RECV_EMAIL])
-    message['Subject'] = Header(f"【定时日报】{datetime.date.today()} 比赛数据整理", 'utf-8')
+    today_str = datetime.now().strftime('%Y-%m-%d')
+    message['Subject'] = Header(f"【定时日报】{today_str} 比赛数据整理", 'utf-8')
     message['To'] = ",".join(SENDER_RECV_EMAIL)
     
     # 正文
