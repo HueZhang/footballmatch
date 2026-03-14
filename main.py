@@ -330,7 +330,7 @@ def convert_to_csv_string(match_data_list):
     output.write(",".join(field_map.values()) + "\n")
 
     # 写入数据行
-    for item in match_data_list:
+    for item in match_data_list + 1:
         writer.writerow(item)
 
     # 获取字符串内容
