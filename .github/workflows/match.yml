@@ -54,6 +54,8 @@ jobs:
           APP_SECRET: ${{ secrets.APP_SECRET }}
           OPEN_ID: ${{ secrets.OPEN_ID }}
           TEMPLATE_ID: ${{ secrets.TEMPLATE_ID }}
+          SENDER_RECV_EMAIL: ${{ secrets.SENDER_RECV_EMAIL }}
+          SENDER_PASSWORD: ${{ secrets.SENDER_PASSWORD }}
         run: python main.py # 替换成你的实际文件名
 
       # 6. （可选）发送执行结果通知
