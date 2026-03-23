@@ -14,7 +14,8 @@ from bs4 import BeautifulSoup
 
 
 # sofascore或其他，okoo只有可投注的比赛，先用okoo
-DATA_URL = "https://www.okooo.com/jingcai/"
+FOOTBALL_URL = "https://www.okooo.com/jingcai/"
+BASKETBALL_URL = "https://www.okooo.com/jingcailanqiu/hunhe/"
 
 # --- GitHub action 获取配置---
 APP_ID = os.environ.get("APP_ID")
@@ -33,7 +34,7 @@ SENDER_PASSWORD = os.environ.get("SENDER_PASSWORD")
 
 
 # 获取网页
-def get_html():
+def get_html(DATA_URL):
     """获取网页源码"""
     headers = {
         "User-Agent": (
@@ -127,6 +128,37 @@ def parse_data(html_content):
 
                 continue  # 跳过这一场，继续解析下一场
 
+    return match_data_list
+
+
+
+# 解析篮球数据
+
+def parse_basketball_data(html_content):
+    """核心解析逻辑 (已加强容错)"""
+    soup = BeautifulSoup(html_content, "html.parser")
+
+    box = soup.find("div",  class_="jcmian")
+    # isover="0" 表示不可投注的比赛
+    all_cont = box.find_all("tr", class_="alltrObj", isover="0")
+    
+    print(f"找到 {len(all_cont)} 场比赛的容器")
+    match_data_list = []
+
+    for container in all_cont:
+        item = {}
+        td1 = container.find("td", class_="td1")
+        match_name = td1.find("a", class_= "ls").text.strip()
+        print(f"比赛名称: {match_name}")
+        item["league_name"] = match_name
+        
+        teams = container.find("td", class_="td3").find_all("a", class_="duinameh")
+        away_team = teams[0].get("title", "未知客队").strip()
+        home_team = teams[1].get("title", "未知主队").strip()
+        print(f"主队: {home_team}, 客队: {away_team}")
+        item["home_name"] = home_team
+        item["away_name"] = away_team
+        match_data_list.append(item)
     return match_data_list
 
 
@@ -333,11 +365,11 @@ def convert_to_csv_string(match_data_list):
     return csv_content
 
 
-def send_email_csv(csv_content):
+def send_email_csv(csv_content, is_basketball=False):
     message = MIMEMultipart()
     message["From"] = formataddr(["数据抓取助手", SENDER_RECV_EMAIL])
     today_str = datetime.now().strftime("%Y-%m-%d")
-    message["Subject"] = Header(f"【定时日报】{today_str} 比赛数据整理", "utf-8")
+    message["Subject"] = Header(f"【定时日报】{today_str} {'篮球' if is_basketball else '足球'}比赛数据整理", "utf-8")
     message["To"] = ",".join(SENDER_RECV_EMAIL)
 
     # 正文
@@ -362,7 +394,8 @@ def main():
     # 发送f1赛程提醒
     send_f1_msg()
     # 获取网页
-    html = get_html()
+    # 足球比赛
+    html = get_html(FOOTBALL_URL)
     if html:
         data = parse_data(html)
         # 执行筛选
@@ -378,8 +411,16 @@ def main():
         csv_string = convert_to_csv_string(data)
         send_email_csv(csv_string)
     else:
-        print("未获取到网页数据，任务终止。")
+        print("未获取到足球比赛网页数据，任务终止。")
 
+    # 篮球比赛
+    basket_html= get_html(BASKETBALL_URL)
+    if basket_html:
+        basketball_data = parse_basketball_data(basket_html)
+        csv_string = convert_to_csv_string(basketball_data)
+        send_email_csv(csv_string)
+    else:
+        print("未获取到篮球比赛网页数据，任务终止。")
 
 if __name__ == "__main__":
     main()
