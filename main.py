@@ -78,6 +78,9 @@ def parse_data(html_content):
     box = soup.find("div", id="content", class_="box")
     all_cont = box.find_all("div", class_="cont")
 
+    if len(all_cont) < 2:
+        print("未找到预期的比赛容器，页面结构可能已变更。")
+        return []
     cont = all_cont[1]
     # 1. 找到所有 div class='touzhu'
     touzhu_divs = cont.find_all("div", class_="touzhu")
@@ -140,7 +143,7 @@ def parse_basketball_data(html_content):
 
     box = soup.find("div",  class_="jcmian")
     # isover="0" 表示不可投注的比赛
-    all_cont = box.find_all("tr", class_="alltrObj", isover="0")
+    all_cont = box.find_all("tr", class_="alltrObj", isover="1")
     
     print(f"找到 {len(all_cont)} 场比赛的容器")
     match_data_list = []
@@ -344,6 +347,13 @@ def convert_to_csv_string(match_data_list):
     if not match_data_list:
         return ""
 
+    if not isinstance(match_data_list, list):
+        print("输入数据格式错误，期望一个列表")
+        return ""
+    
+    if len(match_data_list) == 0:
+        print("输入数据列表为空")
+        return ""
     # 使用 StringIO 在内存中构建文件
     output = io.StringIO()
 
@@ -366,6 +376,11 @@ def convert_to_csv_string(match_data_list):
 
 
 def send_email_csv(csv_content, is_basketball=False):
+    
+    if not csv_content:
+        print("CSV 内容为空，邮件将不会发送。")
+        return
+    
     message = MIMEMultipart()
     message["From"] = formataddr(["数据抓取助手", SENDER_RECV_EMAIL])
     today_str = datetime.now().strftime("%Y-%m-%d")
