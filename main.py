@@ -424,7 +424,7 @@ def main():
 
         # 转换为 CSV 字符串（如果需要发送邮件或其他用途）
         csv_string = convert_to_csv_string(data)
-        send_email_csv(csv_string)
+        send_email_csv(csv_string, is_basketball=False)
     else:
         print("未获取到足球比赛网页数据，任务终止。")
 
@@ -433,7 +433,7 @@ def main():
     if basket_html:
         basketball_data = parse_basketball_data(basket_html)
         csv_string = convert_to_csv_string(basketball_data)
-        send_email_csv(csv_string)
+        send_email_csv(csv_string, is_basketball=True)
     else:
         print("未获取到篮球比赛网页数据，任务终止。")
 
